@@ -1,5 +1,5 @@
 
-namespace PosSystem
+namespace PosBackend
 {
     public class Program
     {

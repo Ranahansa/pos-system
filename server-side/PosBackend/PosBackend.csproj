@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>23775bd3-9310-4686-b860-87d9f40839b1</UserSecretsId>
+    <UserSecretsId>7b43559f-815c-4bf9-b0a1-e1bb8a127486</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
@@ -17,11 +17,12 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
+    <Folder Include="DTOs\" />
     <Folder Include="Data\" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Common\" />
-    <Folder Include="Configurations\" />
     <Folder Include="Services\" />
+    <Folder Include="Data\Repositories\" />
   </ItemGroup>
 
 </Project>
