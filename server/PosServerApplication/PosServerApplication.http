@@ -1,0 +1,6 @@
+@PosServerApplication_HostAddress = http://localhost:5020
+
+GET {{PosServerApplication_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
