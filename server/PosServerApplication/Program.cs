@@ -1,3 +1,8 @@
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using PosServerApplication.Data.Context;
+using PosServerApplication.Models.Configurations;
+using PosServerApplication.Settings;
 
 namespace PosServerApplication
 {
@@ -8,9 +13,10 @@ namespace PosServerApplication
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            ConfigureServices(builder.Services, builder.Configuration);
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Configure Swagger/OpenAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -24,13 +30,33 @@ namespace PosServerApplication
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
+        }
+
+        // Method to configure services for dependency injection
+        private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        {
+            // Configure MongoDB settings from app configuration
+            services.Configure<MongoDbSettings>(
+                configuration.GetSection("MongoDB"));
+
+            // Register MongoDB client
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                return new MongoClient(settings.ConnectionString);
+            });
+
+            // Register MongoDB context
+            services.AddScoped<IApplicationDbContext>(sp =>
+            {
+                var client = sp.GetRequiredService<IMongoClient>();
+                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+                return new ApplicationDbContext(client, settings.DatabaseName);
+            });
         }
     }
 }
