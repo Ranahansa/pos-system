@@ -1,15 +1,19 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PosServerApplication.Data.Context;
+using PosServerApplication.Repositories.Implementations;
+using PosServerApplication.Repositories.Interfaces;
 
-public static class ServiceCollectionExtensions
+namespace PosServerApplication.Infrastructure.Extensions
 {
-    public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
+    public static class ServiceCollectionExtensions
     {
-        services.AddSingleton<IMongoClient>(sp =>
-            new MongoClient(configuration.GetConnectionString("MongoDB")));
-
-        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-
-        return services;
+        public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton(configuration);
+            services.AddScoped<ApplicationDbContext>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            return services;
+        }
     }
 }

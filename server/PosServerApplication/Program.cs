@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using DotNetEnv;
 using PosServerApplication.Data.Context;
-using PosServerApplication.Models.Configurations;
-using PosServerApplication.Settings;
+
 
 namespace PosServerApplication
 {
@@ -10,13 +10,17 @@ namespace PosServerApplication
     {
         public static void Main(string[] args)
         {
+            // Load environment variables from .env file
+            DotNetEnv.Env.Load();
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            ConfigureServices(builder.Services, builder.Configuration);
+            ConfigureServices(builder.Services);
 
             builder.Services.AddControllers();
-            // Configure Swagger/OpenAPI
+
+            // Configure Swagger/OpenAPI for development
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -37,25 +41,27 @@ namespace PosServerApplication
         }
 
         // Method to configure services for dependency injection
-        private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureServices(IServiceCollection services)
         {
-            // Configure MongoDB settings from app configuration
-            services.Configure<MongoDbSettings>(
-                configuration.GetSection("MongoDB"));
+            // Load MongoDB connection settings from environment variables
+            var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
+            var databaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME");
 
-            // Register MongoDB client
+            // Register MongoDB client as a singleton
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-                return new MongoClient(settings.ConnectionString);
+                if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(databaseName))
+                {
+                    throw new InvalidOperationException("MongoDB configuration is missing in environment variables.");
+                }
+                return new MongoClient(connectionString);
             });
 
-            // Register MongoDB context
-            services.AddScoped<IApplicationDbContext>(sp =>
+            // Register MongoDB context with the injected client and database name
+            services.AddScoped(sp =>
             {
                 var client = sp.GetRequiredService<IMongoClient>();
-                var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-                return new ApplicationDbContext(client, settings.DatabaseName);
+                return new ApplicationDbContext(client, databaseName);
             });
         }
     }
