@@ -1,30 +1,29 @@
 ﻿namespace PosServerApplication.Common.Constants
 {
-    public static class OrderStatus
+    public static class OrderConstants
     {
-        // Order Statuses
-        public const string Pending = "Pending";
-        public const string InProgress = "InProgress";
-        public const string Ready = "Ready";
-        public const string Completed = "Completed";
-        public const string Cancelled = "Cancelled";
-
         // Payment Statuses
-        public const string PaymentPending = "Pending";
-        public const string PaymentCompleted = "Completed";
-        public const string PaymentFailed = "Failed";
-        public const string PaymentRefunded = "Refunded";
-        public const string PaymentPartiallyRefunded = "PartiallyRefunded";
+        public static class PaymentStatus
+        {
+            public const string Pending = "Pending";
+            public const string Completed = "Completed";
+            public const string Failed = "Failed";
+            public const string Refunded = "Refunded";
+            public const string PartiallyRefunded = "PartiallyRefunded";
+        }
 
         // Payment Methods
-        public const string Cash = "Cash";
-        public const string CreditCard = "CreditCard";
-        public const string DebitCard = "DebitCard";
-        public const string MobilePayment = "MobilePayment";
-        public const string GiftCard = "GiftCard";
+        public static class PaymentMethod
+        {
+            public const string Cash = "Cash";
+            public const string CreditCard = "CreditCard";
+            public const string DebitCard = "DebitCard";
+            public const string MobilePayment = "MobilePayment";
+            public const string GiftCard = "GiftCard";
+        }
 
-        // Order Type Descriptions
-        public static class Descriptions
+        // Order Status Descriptions
+        public static class StatusDescriptions
         {
             public const string Pending = "Order has been created but not yet processed";
             public const string InProgress = "Order is being prepared in the kitchen";

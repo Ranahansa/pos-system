@@ -78,7 +78,7 @@ namespace PosServerApplication.Models.Entities
 
         [BsonElement("paymentStatus")]
         [BsonRepresentation(BsonType.String)]
-        public string PaymentStatus { get; set; } = "Pending";
+        public string PaymentStatus { get; set; } = OrderConstants.PaymentStatus.Pending;
 
         [BsonElement("paymentMethod")]
         [BsonRepresentation(BsonType.String)]

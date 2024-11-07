@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using PosServerApplication.Common.Constants;
+using PosServerApplication.Common.Enums;
 using System.Collections.Generic;
 
 namespace PosServerApplication.Models.Entities
